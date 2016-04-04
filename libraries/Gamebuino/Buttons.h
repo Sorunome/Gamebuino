@@ -23,6 +23,12 @@
 #include <Arduino.h>
 #include "settings.c"
 
+#if BUTTONS_SIMPLE
+class Buttons {
+public:
+	boolean pressed(uint8_t button);
+};
+#else
 class Buttons {
 public:
     void begin();
@@ -36,6 +42,7 @@ public:
     uint8_t states[NUM_BTN];
 
 };
+#endif
 
 #endif	/* BUTTONS_H */
 

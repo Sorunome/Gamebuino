@@ -111,7 +111,8 @@ void Sound::updateTrack(uint8_t channel){
 	if(trackIsPlaying[channel] && !patternIsPlaying[channel]){
 		uint16_t data = pgm_read_word(trackData[channel] + trackCursor[channel]);
 		if(data == 0xFFFF){ //en of the track
-			trackIsPlaying[channel] = false;
+			//trackIsPlaying[channel] = false;
+			trackCursor[channel] = 0;
 			//Serial.println("track end");
 			return;
 		}

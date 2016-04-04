@@ -19,6 +19,56 @@
 
 #include "Buttons.h"
 
+#if BUTTONS_SIMPLE
+
+
+boolean Buttons::pressed(uint8_t button) {
+    bool ret;
+    if(button == BTN_LEFT){
+        pinMode(BTN_LEFT_PIN, INPUT_PULLUP);
+        ret = digitalRead(BTN_LEFT_PIN) == LOW;
+        pinMode(BTN_LEFT_PIN, INPUT);
+        return ret;
+    }
+    if(button == BTN_UP){
+        pinMode(BTN_UP_PIN, INPUT_PULLUP);
+        ret = digitalRead(BTN_UP_PIN) == LOW;
+        pinMode(BTN_UP_PIN, INPUT);
+        return ret;
+    }
+    if(button == BTN_RIGHT){
+        pinMode(BTN_RIGHT_PIN, INPUT_PULLUP);
+        ret = digitalRead(BTN_RIGHT_PIN) == LOW;
+        pinMode(BTN_RIGHT_PIN, INPUT);
+        return ret;
+    }
+    if(button == BTN_DOWN){
+        pinMode(BTN_DOWN_PIN, INPUT_PULLUP);
+        ret = digitalRead(BTN_DOWN_PIN) == LOW;
+        pinMode(BTN_DOWN_PIN, INPUT);
+        return ret;
+    }
+    if(button == BTN_A){
+        pinMode(BTN_A_PIN, INPUT_PULLUP);
+        ret = digitalRead(BTN_A_PIN) == LOW;
+        pinMode(BTN_A_PIN, INPUT);
+        return ret;
+    }
+    if(button == BTN_B){
+        pinMode(BTN_B_PIN, INPUT_PULLUP);
+        ret = digitalRead(BTN_B_PIN) == LOW;
+        pinMode(BTN_B_PIN, INPUT);
+        return ret;
+    }
+    if(button == BTN_C){
+        pinMode(BTN_C_PIN, INPUT_PULLUP);
+        ret = digitalRead(BTN_C_PIN) == LOW;
+        pinMode(BTN_C_PIN, INPUT);
+        return ret;
+    }
+}
+
+#else
 void Buttons::begin() {
     pins[BTN_LEFT] = BTN_LEFT_PIN;
     pins[BTN_UP] = BTN_UP_PIN;
@@ -122,3 +172,4 @@ uint8_t Buttons::timeHeld(uint8_t button){
         return 0;
     
 }
+#endif

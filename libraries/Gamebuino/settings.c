@@ -28,7 +28,7 @@
 //SETTINGS YOU CAN EDIT
 
 #ifndef NUM_CHANNELS
-#define NUM_CHANNELS 1 //number of sound channels, between 0 and 4
+#define NUM_CHANNELS 2 //number of sound channels, between 0 and 4
 #endif
 #ifndef DISPLAY_ROT
 #define DISPLAY_ROT NOROT //set to NOROT, ROTCCW, ROT180 or ROTCW. Can be used to play in portrait mode.
@@ -48,7 +48,7 @@
 
 //not really useful
 #ifndef ENABLE_BATTERY
-#define ENABLE_BATTERY 1 //disable battery monitoring
+#define ENABLE_BATTERY 0 //disable battery monitoring
 #endif
 #ifndef ENABLE_BACKLIGHT
 #define ENABLE_BACKLIGHT 1 //disable automatic back-light
@@ -153,5 +153,7 @@
 #define BTN_A_PIN       4
 #define BTN_B_PIN       2
 #define BTN_C_PIN       A3
+ 
+#define BUTTONS_SIMPLE 1
 
 #endif /* SETTINGS_C */

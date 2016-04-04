@@ -27,7 +27,9 @@
 #include "Backlight.h"
 #include "Display.h"
 #include "Buttons.h"
+#if ENABLE_BATTERY
 #include "Battery.h"
+#endif
 #include "Sound.h"
 
 #define load_game (*((void(*)(const char* filename))(0x7ffc/2)))
@@ -39,7 +41,9 @@ class Gamebuino {
 public:
     Backlight backlight;
     Buttons buttons;
+#if ENABLE_BATTERY
     Battery battery;
+#endif
     Sound sound;
     Display display;
 
@@ -79,7 +83,9 @@ private:
     void updatePopup();
     const __FlashStringHelper* popupText;
     uint8_t popupTimeLeft;
+#if ENABLE_BATTERY
     void displayBattery();
+#endif
 };
 
 #endif	/* GAMEBUINO_H */

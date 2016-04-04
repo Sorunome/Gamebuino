@@ -47,11 +47,15 @@ void Gamebuino::begin() {
 	//read default settings from flash memory (set using settings.hex)
 	readSettings();
 	//init everything
-	backlight.begin();
+//	backlight.begin();
 	backlight.set(BACKLIGHT_MAX);
+#if !BUTTONS_SIMPLE
 	buttons.begin();
 	buttons.update();
+#endif
+#if ENABLE_BATTERY
 	battery.begin();
+#endif
 	display.begin(SCR_CLK, SCR_DIN, SCR_DC, SCR_CS, SCR_RST);
 	sound.begin();
 	
@@ -92,7 +96,9 @@ void Gamebuino::titleScreen(const __FlashStringHelper*  name, const uint8_t *log
 		display.fontSize = 1;
 		display.textWrap = false;
 		display.persistence = false;
+	#if ENABLE_BATTERY
 		battery.show = false;
+	#endif
 		display.setColor(BLACK);
 		while(1){
 			if(update()){
@@ -152,7 +158,9 @@ void Gamebuino::titleScreen(const __FlashStringHelper*  name, const uint8_t *log
 					changeGame();
 			}
 		}
+	#if ENABLE_BATTERY
 		battery.show = true;
+	#endif
 	}
 }
 
@@ -165,9 +173,13 @@ boolean Gamebuino::update() {
 		frameStartMicros = micros();
 
 		backlight.update();
+	#if !BUTTONS_SIMPLE
 		buttons.update();
+	#endif
+	#if ENABLE_BATTERY
 		battery.update();
-
+	#endif
+	
 		return true;
 
 	} else {
@@ -176,7 +188,9 @@ boolean Gamebuino::update() {
 			sound.updatePattern();
 			sound.updateNote();
 			updatePopup();
+		#if ENABLE_BATTERY
 			displayBattery();
+		#endif
 			
 			display.update(); //send the buffer to the screen
 			if(!display.persistence)
@@ -210,7 +224,11 @@ void Gamebuino::setFrameRate(uint8_t fps) {
 }
 
 void Gamebuino::pickRandomSeed(){
+#if ENABLE_BATTERY
 	randomSeed(~battery.voltage * ~micros() * ~micros() + backlight.ambientLight + micros());
+#else
+	randomSeed(~micros() * ~micros() + backlight.ambientLight + micros());
+#endif
 }
 
 uint8_t Gamebuino::getCpuLoad(){
@@ -245,6 +263,7 @@ int8_t Gamebuino::menu(const char* const* items, uint8_t length) {
 				}
 			}
 			if (exit == false) {
+			#if !BUTTONS_SIMPLE
 				if (buttons.repeat(BTN_DOWN,4)) {
 					activeItem++;
 					sound.playTick();
@@ -253,6 +272,18 @@ int8_t Gamebuino::menu(const char* const* items, uint8_t length) {
 					activeItem--;
 					sound.playTick();
 				}
+			#else
+				if (buttons.pressed(BTN_DOWN)) {
+					activeItem++;
+					sound.playTick();
+					delay(50);
+				}
+				if (buttons.pressed(BTN_UP)) {
+					activeItem--;
+					sound.playTick();
+					delay(50);
+				}
+			#endif
 				//don't go out of the menu
 				if (activeItem == length) activeItem = 0;
 				if (activeItem < 0) activeItem = length - 1;
@@ -307,6 +338,7 @@ void Gamebuino::keyboard(char* text, uint8_t length) {
 	while (1) {
 		if (update()) {
 			//move the character selector
+		#if !BUTTONS_SIMPLE
 			if (buttons.repeat(BTN_DOWN, 4)) {
 				activeY++;
 				sound.playTick();
@@ -323,6 +355,28 @@ void Gamebuino::keyboard(char* text, uint8_t length) {
 				activeX--;
 				sound.playTick();
 			}
+		#else
+			if (buttons.pressed(BTN_DOWN)) {
+				activeY++;
+				sound.playTick();
+				delay(50);
+			}
+			if (buttons.pressed(BTN_UP)) {
+				activeY--;
+				sound.playTick();
+				delay(50);
+			}
+			if (buttons.pressed(BTN_RIGHT)) {
+				activeX++;
+				sound.playTick();
+				delay(50);
+			}
+			if (buttons.pressed(BTN_LEFT)) {
+				activeX--;
+				sound.playTick();
+				delay(50);
+			}
+		#endif
 			//don't go out of the keyboard
 			if (activeX == KEYBOARD_W) activeX = 0;
 			if (activeX < 0) activeX = KEYBOARD_W - 1;
@@ -448,8 +502,8 @@ void Gamebuino::updatePopup(){
 #endif
 }
 
+#if ENABLE_BATTERY
 void Gamebuino::displayBattery(){
-#if (ENABLE_BATTERY > 0)
 	if(battery.thresholds[0] == 0) return;
 	display.setColor(BLACK, WHITE);
 	display.cursorX = LCDWIDTH-display.fontWidth+1;
@@ -502,8 +556,8 @@ void Gamebuino::displayBattery(){
 		}
 		break;
 	}
-#endif
 }
+#endif
 
 void Gamebuino::changeGame(){
 	display.clear();
@@ -516,7 +570,9 @@ void Gamebuino::changeGame(){
 	display.println(F("\nNo SD card or\nno LOADER.HEX\n\n\25:Exit"));
 	display.update();
 	while(1){
+	#if !BUTTONS_SIMPLE
 		buttons.update();
+	#endif
 		if(buttons.pressed(BTN_A))
 		break;
 		delay(50);
@@ -543,10 +599,12 @@ void Gamebuino::readSettings(){
 
 		startMenuTimer = pgm_read_byte(SETTINGS_PAGE+OFFSET_START_MENU_TIMER);
 		
+	#if ENABLE_BATTERY
 		battery.thresholds[0] = pgm_read_word(SETTINGS_PAGE+OFFSET_BATTERY_CRITIC);
 		battery.thresholds[1] = pgm_read_word(SETTINGS_PAGE+OFFSET_BATTERY_LOW);
 		battery.thresholds[2] = pgm_read_word(SETTINGS_PAGE+OFFSET_BATTERY_MED);
 		battery.thresholds[3] = pgm_read_word(SETTINGS_PAGE+OFFSET_BATTERY_FULL);
+	#endif
 	}
 	else{
 		display.contrast = SCR_CONTRAST;
@@ -559,11 +617,12 @@ void Gamebuino::readSettings(){
 		sound.globalVolume = VOLUME_GLOBAL_MAX;
 		
 		startMenuTimer = START_MENU_TIMER;
-		
+	#if ENABLE_BATTERY
 		battery.thresholds[0] = BAT_LVL_CRITIC;
 		battery.thresholds[1] = BAT_LVL_LOW;
 		battery.thresholds[2] = BAT_LVL_MED;
 		battery.thresholds[3] = BAT_LVL_FULL;
+	#endif
 	}
 }
 
