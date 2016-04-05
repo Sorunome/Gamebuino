@@ -56,7 +56,7 @@ void Gamebuino::begin() {
 #if ENABLE_BATTERY
 	battery.begin();
 #endif
-	display.begin(SCR_CLK, SCR_DIN, SCR_DC, SCR_CS, SCR_RST);
+	display.begin();
 	sound.begin();
 	
 	//mute when B is held during start up

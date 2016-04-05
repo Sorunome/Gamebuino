@@ -156,4 +156,49 @@
  
 #define BUTTONS_SIMPLE 1
 
+
+#define PA 1
+#define PB 2
+#define PC 3
+#define PD 4
+#define PE 5
+#define PF 6
+#define PG 7
+#define PH 8
+#define PJ 10
+#define PK 11
+#define PL 12
+
+#define CONCAT(A,B)         A ## B
+#define EXPAND_CONCAT(A,B)  CONCAT(A, B)
+
+#define ARGN(N, LIST)       EXPAND_CONCAT(ARG_, N) LIST
+#define ARG_A0(A0, ...)    A0
+#define ARG_A1(A0, A1, ...)    A1
+#define ARG_A2(A0, A1, A2, ...)    A2
+#define ARG_A3(A0, A1, A2, A3, ...)    A3
+#define ARG_A4(A0, A1, A2, A3, A4, ...)    A4
+#define ARG_A5(A0, A1, A2, A3, A4, A5, ...)    A5
+#define ARG_A6(A0, A1, A2, A3, A4, A5, A6, ...)    A6
+#define ARG_A7(A0, A1, A2, A3, A4, A5, A6, A7, ...)    A7
+#define ARG_A8(A0, A1, A2, A3, A4, A5, A6, A7, A8, ...)    A8
+#define ARG_A9(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, ...)    A9
+#define ARG_10(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, ...)    A10
+#define ARG_11(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, ...)    A11
+#define ARG_12(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, ...)    A12
+#define ARG_13(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, ...)    A13
+#define ARG_14(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, ...)    A14
+#define ARG_15(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15, ...)    A15
+#define ARG_16(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15, A16, ...)    A16
+#define ARG_17(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15, A16, A17, ...)    A17
+#define ARG_18(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15, A16, A17, A18, ...)    A18
+#define ARG_19(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15, A16, A17, A18, A19, ...)    A19
+#define ARG_20(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15, A16, A17, A18, A19, A20, ...)    A20
+ 
+#define digital_pin_to_port_PGM_LUT (PD,PD,PD,PD,PD,PD,PD,PD,PB,PB,PB,PB,PB,PB,PC,PC,PC,PC,PC,PC)
+#define _digitalPinToPort(NUM) ARGN(NUM, digital_pin_to_port_PGM_LUT)
+ 
+
+
+
 #endif /* SETTINGS_C */

@@ -111,7 +111,7 @@ extern uint8_t _displayBuffer[];
 
 class Display : public Print {
 public:
-	void begin(int8_t SCLK, int8_t DIN, int8_t DC, int8_t CS, int8_t RST);
+	void begin();
 
 	void command(uint8_t c);
 	void data(uint8_t c);
@@ -161,9 +161,8 @@ public:
 	byte frameCount;
 
 private:
-	int8_t sclk, din, dc, cs, rst;
-	volatile uint8_t *mosiport, *clkport, *csport, *dcport;
-	uint8_t mosipinmask, clkpinmask, cspinmask, dcpinmask;
+	//volatile uint8_t *mosiport, *clkport, *csport, *dcport;
+	//uint8_t mosipinmask, clkpinmask, cspinmask, dcpinmask;
 	
 	uint8_t *font;
 	uint8_t color, bgcolor;

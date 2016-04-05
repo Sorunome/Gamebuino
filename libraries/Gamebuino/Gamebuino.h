@@ -19,10 +19,14 @@
 
 #ifndef GAMEBUINO_H
 #define	GAMEBUINO_H
+ 
+
 
 #include <Arduino.h>
 #include <avr/pgmspace.h>
 #include <avr/sleep.h>
+
+ 
 #include "settings.c"
 #include "Backlight.h"
 #include "Display.h"
