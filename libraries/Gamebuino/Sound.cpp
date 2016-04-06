@@ -59,9 +59,6 @@ uint8_t noteDuration[NUM_CHANNELS]; // how long a note still needs to be played
 #define WAVEFORM_NOISE 1
 uint8_t _chanWaveform[NUM_CHANNELS];
 
-const uint16_t squareWaveInstrument[] PROGMEM = {0x0101, 0x03F7};
-const uint16_t noiseInstrument[] PROGMEM = {0x0101, 0x03FF};
-const uint16_t* const defaultInstruments[] PROGMEM = {squareWaveInstrument,noiseInstrument};
 
 #if(EXTENDED_NOTE_RANGE > 0)
 //extended note range
@@ -373,9 +370,6 @@ void __attribute__((optimize("O3"))) Sound::generateOutput() {
 			outputChanged = true;
 			_chanState[0] = !_chanState[0];
 			_chanCount[0] = 0;
-			if (_chanWaveform[0] == WAVEFORM_SQUARE) {
-				_chanOutput[0] = _chanState[0] * _chanOutputVolume[0];
-			}
 			if (_chanWaveform[0] == WAVEFORM_NOISE) {
 				_rand = 67 * _rand + 71;
 				_chanOutput[0] = _rand % _chanOutputVolume[0];
@@ -392,9 +386,6 @@ void __attribute__((optimize("O3"))) Sound::generateOutput() {
 			outputChanged = true;
 			_chanState[1] = !_chanState[1];
 			_chanCount[1] = 0;
-			if (_chanWaveform[1] == WAVEFORM_SQUARE) {
-				_chanOutput[1] = _chanState[1] * _chanOutputVolume[1];
-			}
 			if (_chanWaveform[1] == WAVEFORM_NOISE) {
 				_rand = 67 * _rand + 71;
 				_chanOutput[1] = _rand % _chanOutputVolume[1];
@@ -411,9 +402,6 @@ void __attribute__((optimize("O3"))) Sound::generateOutput() {
 			outputChanged = true;
 			_chanState[2] = !_chanState[2];
 			_chanCount[2] = 0;
-			if (_chanWaveform[2] == WAVEFORM_SQUARE) {
-				_chanOutput[2] = _chanState[2] * _chanOutputVolume[2];
-			}
 			if (_chanWaveform[2] == WAVEFORM_NOISE) {
 				_rand = 67 * _rand + 71;
 				_chanOutput[2] = _rand % _chanOutputVolume[2];
@@ -430,9 +418,6 @@ void __attribute__((optimize("O3"))) Sound::generateOutput() {
 			outputChanged = true;
 			_chanState[3] = !_chanState[3];
 			_chanCount[3] = 0;
-			if (_chanWaveform[3] == WAVEFORM_SQUARE) {
-				_chanOutput[3] = _chanState[3] * _chanOutputVolume[3];
-			}
 			if (_chanWaveform[3] == WAVEFORM_NOISE) {
 				_rand = 67 * _rand + 71;
 				_chanOutput[3] = _rand % _chanOutputVolume[3];
@@ -445,21 +430,29 @@ void __attribute__((optimize("O3"))) Sound::generateOutput() {
 		uint8_t output = 0;
 
 		//CHANNEL 0
-		output += _chanOutput[0];
-		
+		if(_chanState[0]){
+			output += _chanOutput[0];
+		}
+
 		//CHANNEL 1
 		#if (NUM_CHANNELS > 1)
-		output += _chanOutput[1];
+		if(_chanState[1]){
+			output += _chanOutput[1];
+		}
 		#endif
 		
 		//CHANNEL 2
 		#if (NUM_CHANNELS > 2)
-		output += _chanOutput[2];
+		if(_chanState[2]){
+			output += _chanOutput[2];
+		}
 		#endif
 		
 		//CHANNEL 3
 		#if (NUM_CHANNELS > 3)
-		output += _chanOutput[3];
+		if(_chanState[3]){
+			output += _chanOutput[3];
+		}
 		#endif
 
 		OCR2B = output; //60x faster than analogOutput() !
