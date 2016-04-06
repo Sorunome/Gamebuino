@@ -61,20 +61,20 @@ void Gamebuino::begin() {
 	
 	//mute when B is held during start up
 	if(buttons.pressed(BTN_B)){
-		sound.setVolume(0);
+		//sound.setVolume(0);
 	}
 	else{ //play the startup sound on each channel for it to be louder
 		#if(NUM_CHANNELS > 0)
-			sound.playPattern(startupSound, 0);
+			//sound.playPattern(startupSound, 0);
 		#endif
 		#if(NUM_CHANNELS > 1)
-			sound.playPattern(startupSound, 1);
+			//sound.playPattern(startupSound, 1);
 		#endif
 		#if(NUM_CHANNELS > 2)
-			sound.playPattern(startupSound, 2);
+			//sound.playPattern(startupSound, 2);
 		#endif
 		#if(NUM_CHANNELS > 3)
-			sound.playPattern(startupSound, 3);
+			//sound.playPattern(startupSound, 3);
 		#endif
 	}
 }
@@ -132,7 +132,7 @@ void Gamebuino::titleScreen(const __FlashStringHelper*  name, const uint8_t *log
 				//B button
 				display.cursorX = LCDWIDTH - display.fontWidth*3 - 1;
 				display.cursorY++;
-				if(sound.globalVolume)
+				if(1)//sound.globalVolume)
 					display.println(F("\26\23\24"));
 				else
 					display.println(F("\26\23x"));
@@ -143,14 +143,14 @@ void Gamebuino::titleScreen(const __FlashStringHelper*  name, const uint8_t *log
 				
 				//toggle volume when B is pressed
 				if(buttons.pressed(BTN_B)){
-					sound.setVolume(sound.globalVolume+1);
-					sound.playTick();
+					//sound.setVolume(//sound.globalVolume+1);
+					//sound.playTick();
 				}
 				//leave the menu
 				if(buttons.pressed(BTN_A) || ((frameCount>=startMenuTimer)&&(startMenuTimer != 255))){
 					startMenuTimer = 255; //don't automatically skip the title screen next time it's displayed
-					sound.stopPattern(0);
-					sound.playOK();
+					//sound.stopPattern(0);
+					//sound.playOK();
 					break;
 				}
 				//flash the loader
@@ -184,9 +184,9 @@ boolean Gamebuino::update() {
 
 	} else {
 		if (!frameEndMicros) { //runs once at the end of the frame
-			sound.updateTrack();
-			sound.updatePattern();
-			sound.updateNote();
+			//sound.updateTrack();
+			//sound.updatePattern();
+			//sound.updateNote();
 			updatePopup();
 		#if ENABLE_BATTERY
 			displayBattery();
@@ -219,8 +219,8 @@ boolean Gamebuino::update() {
 
 void Gamebuino::setFrameRate(uint8_t fps) {
 	timePerFrame = 1000 / fps;
-	sound.prescaler = fps / 20;
-	sound.prescaler = max(1, sound.prescaler);
+	//sound.prescaler = fps / 20;
+	//sound.prescaler = max(1, //sound.prescaler);
 }
 
 void Gamebuino::pickRandomSeed(){
@@ -257,30 +257,30 @@ int8_t Gamebuino::menu(const char* const* items, uint8_t length) {
 				targetY = - display.fontHeight * length - 2; //send the menu out of the screen
 				if (buttons.pressed(BTN_A)) {
 					answer = activeItem;
-					sound.playOK();
+					//sound.playOK();
 				} else {
-					sound.playCancel();
+					//sound.playCancel();
 				}
 			}
 			if (exit == false) {
 			#if !BUTTONS_SIMPLE
 				if (buttons.repeat(BTN_DOWN,4)) {
 					activeItem++;
-					sound.playTick();
+					//sound.playTick();
 				}
 				if (buttons.repeat(BTN_UP,4)) {
 					activeItem--;
-					sound.playTick();
+					//sound.playTick();
 				}
 			#else
 				if (buttons.pressed(BTN_DOWN)) {
 					activeItem++;
-					sound.playTick();
+					//sound.playTick();
 					delay(50);
 				}
 				if (buttons.pressed(BTN_UP)) {
 					activeItem--;
-					sound.playTick();
+					//sound.playTick();
 					delay(50);
 				}
 			#endif
@@ -341,39 +341,39 @@ void Gamebuino::keyboard(char* text, uint8_t length) {
 		#if !BUTTONS_SIMPLE
 			if (buttons.repeat(BTN_DOWN, 4)) {
 				activeY++;
-				sound.playTick();
+				//sound.playTick();
 			}
 			if (buttons.repeat(BTN_UP, 4)) {
 				activeY--;
-				sound.playTick();
+				//sound.playTick();
 			}
 			if (buttons.repeat(BTN_RIGHT, 4)) {
 				activeX++;
-				sound.playTick();
+				//sound.playTick();
 			}
 			if (buttons.repeat(BTN_LEFT, 4)) {
 				activeX--;
-				sound.playTick();
+				//sound.playTick();
 			}
 		#else
 			if (buttons.pressed(BTN_DOWN)) {
 				activeY++;
-				sound.playTick();
+				//sound.playTick();
 				delay(50);
 			}
 			if (buttons.pressed(BTN_UP)) {
 				activeY--;
-				sound.playTick();
+				//sound.playTick();
 				delay(50);
 			}
 			if (buttons.pressed(BTN_RIGHT)) {
 				activeX++;
-				sound.playTick();
+				//sound.playTick();
 				delay(50);
 			}
 			if (buttons.pressed(BTN_LEFT)) {
 				activeX--;
-				sound.playTick();
+				//sound.playTick();
 				delay(50);
 			}
 		#endif
@@ -398,14 +398,14 @@ void Gamebuino::keyboard(char* text, uint8_t length) {
 					text[activeChar+1] = '\0';
 				}
 				activeChar++;
-				sound.playOK();
+				//sound.playOK();
 				if (activeChar > length)
 				activeChar = length;
 			}
 			//erase character
 			if (buttons.pressed(BTN_B)) {
 				activeChar--;
-				sound.playCancel();
+				//sound.playCancel();
 				if (activeChar >= 0)
 				text[activeChar] = 0;
 				else
@@ -413,7 +413,7 @@ void Gamebuino::keyboard(char* text, uint8_t length) {
 			}
 			//leave menu
 			if (buttons.pressed(BTN_C)) {
-				sound.playOK();
+				//sound.playOK();
 				while (1) {
 					if (update()) {
 						//display.setCursor(0,0);
@@ -421,11 +421,11 @@ void Gamebuino::keyboard(char* text, uint8_t length) {
 						display.print(text);
 						display.println(F("\n\n\n\x15:okay \x16:edit"));
 						if(buttons.pressed(BTN_A)){
-							sound.playOK();
+							//sound.playOK();
 							return;
 						}
 						if(buttons.pressed(BTN_B)){
-							sound.playCancel();
+							//sound.playCancel();
 							break;
 						}
 					}
@@ -511,7 +511,7 @@ void Gamebuino::displayBattery(){
 	byte count = 168;
 	switch(battery.level){
 	case 0://battery critic, power down
-		sound.stopPattern();
+		//sound.stopPattern();
 		display.fontSize = 1;
 		display.setFont(font3x5);
 		battery.thresholds[0] = 0; //disable the battery monitoring to avoid infinite recursive loop
@@ -594,8 +594,8 @@ void Gamebuino::readSettings(){
 		backlight.ambientLightMin = pgm_read_word(SETTINGS_PAGE+OFFSET_LIGHT_MIN);
 		backlight.ambientLightMax = pgm_read_word(SETTINGS_PAGE+OFFSET_LIGHT_MAX);
 		
-		sound.volumeMax = pgm_read_byte(SETTINGS_PAGE+OFFSET_VOLUME_MAX);
-		sound.globalVolume = pgm_read_byte(SETTINGS_PAGE+OFFSET_VOLUME_DEFAULT);
+		//sound.volumeMax = pgm_read_byte(SETTINGS_PAGE+OFFSET_VOLUME_MAX);
+		//sound.globalVolume = pgm_read_byte(SETTINGS_PAGE+OFFSET_VOLUME_DEFAULT);
 
 		startMenuTimer = pgm_read_byte(SETTINGS_PAGE+OFFSET_START_MENU_TIMER);
 		
@@ -613,8 +613,8 @@ void Gamebuino::readSettings(){
 		backlight.ambientLightMin = AMBIENTLIGHT_MIN;
 		backlight.ambientLightMax = AMBIENTLIGHT_MAX;
 		
-		sound.volumeMax = VOLUME_GLOBAL_MAX;
-		sound.globalVolume = VOLUME_GLOBAL_MAX;
+		//sound.volumeMax = VOLUME_GLOBAL_MAX;
+		//sound.globalVolume = VOLUME_GLOBAL_MAX;
 		
 		startMenuTimer = START_MENU_TIMER;
 	#if ENABLE_BATTERY

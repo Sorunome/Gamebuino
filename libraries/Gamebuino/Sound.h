@@ -31,6 +31,30 @@
 #define CMD_ARPEGGIO 3
 #define CMD_TREMOLO 4
 
+class Sound{
+public:
+	void begin();
+	static void generateOutput();
+
+	static void command(uint8_t cmd, uint8_t X, int8_t Y, uint8_t i);
+
+	static void stopTrack(uint8_t channel);
+	static void playTrack(uint8_t channel);
+	static void updateTrack(uint8_t channel);
+	static void updateTrack();
+
+	static void playPattern(const uint16_t* pattern, uint8_t channel);
+	static void stopPattern(uint8_t channel);
+	static void updatePattern(uint8_t channel);
+	static void updatePattern();
+
+	static void playNote(uint8_t pitch, uint8_t duration, uint8_t channel);
+	static void stopNote(uint8_t channel);
+	static void updateNote(uint8_t channel);
+	static void updateNote();
+};
+
+/*
 class Sound {
 public:
 	void begin();
@@ -128,5 +152,6 @@ public:
 	static void updateOutput();
 };
 
+*/
 #endif	/* SOUND_H */
 
