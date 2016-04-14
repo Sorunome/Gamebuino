@@ -58,14 +58,14 @@ public:
     void titleScreen();
     boolean update();
 	uint8_t startMenuTimer;
-    uint32_t frameCount;
-    void setFrameRate(uint8_t fps);
+    //uint32_t frameCount;
+    //void setFrameRate(uint8_t fps);
 	void pickRandomSeed();
 	
-	uint8_t getCpuLoad();
+	//uint8_t getCpuLoad();
     uint16_t getFreeRam();
-    uint16_t frameDurationMicros;
-    uint32_t frameStartMicros, frameEndMicros;
+    //uint16_t frameDurationMicros;
+    //uint32_t frameStartMicros, frameEndMicros;
     
     int8_t menu(const char* const* items, uint8_t length);
     void keyboard(char* text, uint8_t length);
@@ -82,8 +82,9 @@ public:
 
 	
 private:
-    uint8_t timePerFrame;
+    //uint8_t timePerFrame;
     uint32_t nextFrameMillis;
+    bool afterFrame = false;
     void updatePopup();
     const __FlashStringHelper* popupText;
     uint8_t popupTimeLeft;

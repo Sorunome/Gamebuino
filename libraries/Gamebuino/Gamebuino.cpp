@@ -23,6 +23,9 @@ const uint16_t startupSound[] PROGMEM = {0x0005,0x3089,0x208,0x238,0x7849,0x1468
 // a 3x5 font table
 extern const uint8_t font3x5[] PROGMEM;
 
+#define FRAMERATE 40
+#define TIMEPERFRAME (1000 / FRAMERATE)
+
 const uint8_t gamebuinoLogo[] PROGMEM =
 {
 	84,10, //width and height
@@ -39,10 +42,10 @@ const uint8_t gamebuinoLogo[] PROGMEM =
 };
 
 void Gamebuino::begin() {
-	timePerFrame = 50;
+	//timePerFrame = 50;
 	//nextFrameMillis = 0;
 	//frameCount = 0;
-	frameEndMicros = 1;
+	//frameEndMicros = 1;
 	startMenuTimer = 255;
 	//read default settings from flash memory (set using settings.hex)
 	readSettings();
@@ -125,7 +128,8 @@ void Gamebuino::titleScreen(const __FlashStringHelper*  name, const uint8_t *log
 				//A button
 				display.cursorX = LCDWIDTH - display.fontWidth*3 -1;
 				display.cursorY = LCDHEIGHT - display.fontHeight*3 - 3;
-				if((frameCount/16)%2)
+				//if((frameCount/16)%2)
+				if(millis()/500%2)
 				  display.println(F("\25 \20"));
 				else
 				  display.println(F("\25\20 "));
@@ -147,7 +151,7 @@ void Gamebuino::titleScreen(const __FlashStringHelper*  name, const uint8_t *log
 					//sound.playTick();
 				}
 				//leave the menu
-				if(buttons.pressed(BTN_A) || ((frameCount>=startMenuTimer)&&(startMenuTimer != 255))){
+				if(buttons.pressed(BTN_A) || (/*(frameCount>=startMenuTimer)&&*/(startMenuTimer != 255))){
 					startMenuTimer = 255; //don't automatically skip the title screen next time it's displayed
 					//sound.stopPattern(0);
 					//sound.playOK();
@@ -165,12 +169,13 @@ void Gamebuino::titleScreen(const __FlashStringHelper*  name, const uint8_t *log
 }
 
 boolean Gamebuino::update() {
-	if (((nextFrameMillis - millis()) > timePerFrame) && frameEndMicros) { //if time to render a new frame is reached and the frame end has ran once
-		nextFrameMillis = millis() + timePerFrame;
-		frameCount++;
+	if (((nextFrameMillis - millis()) > TIMEPERFRAME) && !afterFrame) { //if time to render a new frame is reached and the frame end has ran once
+		nextFrameMillis = millis() + TIMEPERFRAME;
+		//frameCount++;
 
-		frameEndMicros = 0;
-		frameStartMicros = micros();
+		//frameEndMicros = 0;
+		//frameStartMicros = micros();
+		afterFrame = true;
 
 		backlight.update();
 	#if !BUTTONS_SIMPLE
@@ -183,7 +188,7 @@ boolean Gamebuino::update() {
 		return true;
 
 	} else {
-		if (!frameEndMicros) { //runs once at the end of the frame
+		if (afterFrame) { //runs once at the end of the frame
 			//sound.updateTrack();
 			//sound.updatePattern();
 			//sound.updateNote();
@@ -196,8 +201,9 @@ boolean Gamebuino::update() {
 			if(!display.persistence)
 			display.clear(); //clear the buffer
 
-			frameEndMicros = micros(); //measure the frame's end time
-			frameDurationMicros = frameEndMicros - frameStartMicros;
+			//frameEndMicros = micros(); //measure the frame's end time
+			//frameDurationMicros = frameEndMicros - frameStartMicros;
+			afterFrame = false;
 
 			//            display.setTextColor(BLACK);
 			//            display.setCursor(0, 40);
@@ -216,12 +222,12 @@ boolean Gamebuino::update() {
 		return false;
 	}
 }
-
+/*
 void Gamebuino::setFrameRate(uint8_t fps) {
 	timePerFrame = 1000 / fps;
 	//sound.prescaler = fps / 20;
 	//sound.prescaler = max(1, //sound.prescaler);
-}
+}*/
 
 void Gamebuino::pickRandomSeed(){
 #if ENABLE_BATTERY
@@ -230,11 +236,11 @@ void Gamebuino::pickRandomSeed(){
 	randomSeed(~micros() * ~micros() + backlight.ambientLight + micros());
 #endif
 }
-
+/*
 uint8_t Gamebuino::getCpuLoad(){
 	return(frameDurationMicros/(10*timePerFrame));
 }
-
+*/
 uint16_t Gamebuino::getFreeRam() {
 	//from http://www.controllerprojects.com/2011/05/23/determining-sram-usage-on-arduino/
 	extern int __heap_start, *__brkval;
@@ -468,7 +474,8 @@ void Gamebuino::keyboard(char* text, uint8_t length) {
 			display.setColor(BLACK);
 			display.print(text);
 			//blinking cursor
-			if (((frameCount % 8) < 4) && (activeChar < (length-1)))
+			//if (((frameCount % 8) < 4) && (activeChar < (length-1)))
+			if ((millis()/500%2) && (activeChar < (length-1)))
 			display.drawChar(display.fontWidth * activeChar, LCDHEIGHT-display.fontHeight, '_',1);
 		}
 	}
