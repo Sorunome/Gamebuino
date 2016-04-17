@@ -43,4 +43,3 @@ public:
 };
 
 #endif	/* BATTERY_H */
-
