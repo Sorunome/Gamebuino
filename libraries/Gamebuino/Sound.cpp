@@ -129,7 +129,7 @@ void Sound::command(uint8_t cmd, uint8_t X, int8_t Y, uint8_t i){
 
 void Sound::playTrack(uint8_t channel){
 	Sound::stopTrack(channel);
-	trackData[channel] = (uint16_t*)(SOUNDPOINTER + (channel*40));
+	trackData[channel] = (uint16_t*)(SOUNDPOINTER + (channel*42));
 }
 
 void Sound::updateTrack(uint8_t channel){
