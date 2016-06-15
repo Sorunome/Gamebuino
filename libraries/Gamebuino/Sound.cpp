@@ -230,6 +230,7 @@ void Sound::updatePattern(uint8_t i){
 			data >>= 2;
 
 			uint8_t pitch = data & 0x003F;
+			
 			data >>= 6;
 			
 			uint8_t duration = data;
@@ -289,7 +290,6 @@ void Sound::updateNote(uint8_t i){
 		if(arpeggioStepDuration[i]){
 			_chanHalfPeriod[i] += commandsCounter[i] / arpeggioStepDuration[i] * arpeggioStepSize[i];
 		}
-		_chanHalfPeriod[i] &=  NUM_PITCH; //wrap
 
 		_chanOutput[i] = noteVolume[i] * 7;
 		if(volumeSlideStepDuration[i]){
@@ -302,18 +302,20 @@ void Sound::updateNote(uint8_t i){
 		if(_chanHalfPeriod[i] == 63){
 			_chanOutput[i] = 0;
 		}
+		_chanHalfPeriod[i] &=  NUM_PITCH; //wrap
 
 
 		_chanHalfPeriod[i] = pgm_read_byte(_halfPeriods + _chanHalfPeriod[i]);
 		_chanOutput[i] = _chanOutputVolume[i] = _chanOutput[i] * globalVolume * VOLUME_CHANNEL_MAX;
 	#else
 		_chanHalfPeriod[i] = notePitch[i];
-		_chanHalfPeriod[i] %= NUM_PITCH; //wrap
 		
 		_chanOutput[i] = noteVolume[i] * 7;
+		
 		if(_chanHalfPeriod[i] == 63){
 			_chanOutput[i] = 0;
 		}
+		_chanHalfPeriod[i] %= NUM_PITCH; //wrap
 
 		_chanHalfPeriod[i] = pgm_read_byte(_halfPeriods + _chanHalfPeriod[i]);
 		_chanOutput[i] = _chanOutputVolume[i] = _chanOutput[i] * globalVolume * VOLUME_CHANNEL_MAX;
